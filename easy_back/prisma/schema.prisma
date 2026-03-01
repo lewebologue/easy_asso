@@ -1,0 +1,79 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+  moduleFormat = "cjs"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  lastName  String
+  firstName String
+  role      UserRole[] @default([USER])
+  entityId  String?
+  entity    Entity?  @relation(fields: [entityId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  password  String
+}
+
+model Entity {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  name      String
+  phone     String?   @db.VarChar(10)
+  address   String?
+  zipCode   Float
+  city      String
+  rna       String
+  siren     String?
+  users     User[]
+  events    Event[]
+}
+
+model Event {
+  id             String   @id @default(uuid())
+  eventType      EventType
+  eventStartDate DateTime
+  eventEndDate   DateTime
+  eventStartHour String
+  eventEndHour   String
+  eventLocation  String?
+  eventZipCode   Float?
+  entityId       String?
+  entity         Entity?  @relation(fields: [entityId], references: [id])
+}
+
+
+enum UserRole {
+  USER
+  ADMIN
+  MEMBRE
+  MEMBRE_HONNEUR
+  PRESIDENT
+  CO_PRESIDENT
+  VICE_PRESIDENT
+  TRESORIER
+  VICE_TRESORIER
+  SECRETAIRE
+  VICE_SECRETAIRE
+}
+
+enum EventType {
+  ASSEMBLEE_GENERALE
+  REUNION
+  VIDE_GRENIER
+  LOTO
+  VENTE
+  AUTRE
+}
