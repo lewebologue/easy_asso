@@ -37,7 +37,7 @@ export class UserService {
   async findByEmailOrName(identifier: string): Promise<User | null> {
     const user = await this.prisma.user.findFirst({
       where: {
-        OR: [{ email: identifier }, { name: identifier }],
+        OR: [{ email: identifier }],
       },
     });
     return user;

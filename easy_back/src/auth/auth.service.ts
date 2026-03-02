@@ -29,11 +29,11 @@ export class AuthService {
       throw new HttpException('Invalid credentials', 403);
     }
 
-    this.logger.log(`Successful sign-in for user: ${user.name}`);
-    const payload = { name: user.name, role: user.Role };
+    this.logger.log(`Successful sign-in for user: ${user.lastName}`);
+    const payload = { name: user.lastName, firstName: user.firstName, role: user.role };
     return {
-      user: user.name || '',
-      role: user.Role,
+      user: user.lastName + ' ' + user.firstName || '',
+      role: user.role,
       access_token: await this.jwt.signAsync(payload),
     };
   }
